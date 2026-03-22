@@ -1,0 +1,37 @@
+# =============================================================
+# Makefile - ps2_pad_remap
+# Aplicativo de remapeamento de D-pad para PS2 / OPL
+# Compatível com PS2SDK (https://github.com/ps2dev/ps2sdk)
+# =============================================================
+
+# Nome do binário ELF gerado
+EE_BIN = ps2_pad_remap.elf
+
+# Arquivos objeto a compilar
+EE_OBJS = src/main.o
+
+# Bibliotecas necessárias
+# -lpad:    libpad (controle)
+# -lkernel: funções do kernel do PS2
+# -lc:      libc padrão
+EE_LIBS = -lpad -lkernel -lc
+
+# Flags de compilação
+EE_CFLAGS += -Wall -O2 -fdata-sections -ffunction-sections
+
+# Flags do linker: remove seções não utilizadas
+EE_LDFLAGS += -Wl,--gc-sections
+
+# Alvo padrão
+all: $(EE_BIN)
+
+# Limpeza
+clean:
+	rm -f $(EE_OBJS) $(EE_BIN)
+
+# Rebuild completo
+rebuild: clean all
+
+# Inclui os makefiles globais do PS2SDK
+include $(PS2SDK)/samples/Makefile.pref
+include $(PS2SDK)/samples/Makefile.eeglobal
