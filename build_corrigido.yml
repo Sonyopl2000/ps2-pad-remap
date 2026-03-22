@@ -1,0 +1,31 @@
+name: Build PS2 ELF
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: ps2dev/ps2dev:latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Instalar dependências (Make)
+        run: |
+          apk add --no-cache make
+
+      - name: Compilar o projeto
+        run: make clean all
+
+      - name: Publicar artefato ELF
+        uses: actions/upload-artifact@v4
+        with:
+          name: ps2_pad_remap-elf
+          path: ps2_pad_remap.elf
+          if-no-files-found: error
